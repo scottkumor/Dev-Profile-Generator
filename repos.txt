@@ -1,8 +1,0 @@
-Day-Planner
-Dev-Profile-Generator
-Multiple-Choice-Quiz
-Password-Generator
-prework-about-me
-scottkumor
-spotlight
-Weather-Dashboard

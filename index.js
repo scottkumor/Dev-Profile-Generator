@@ -1,70 +1,105 @@
-function init() {
-
-    
 const fs = require("fs");
+const util = require("util");
 const axios = require("axios");
 const inquirer = require("inquirer");
-//generate static html
 
-
-//convert that thml to a pdf
-
-//save pdf to the folder (use fs)
-
-
-
-
+const writeFileAsync = util.promisify(fs.writeFile);
 
 inquirer
   .prompt({
-    message: "Enter your GitHub username",
+    message: "Enter your GitHub username:",
     name: "username"
   })
   .then(function({ username }) {
-    const queryUrl = `https://api.github.com/users/${username}/repos?per_page=100`;
+    const queryUrl = `https://api.github.com/users/${username}?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
 
-    axios.get(queryUrl).then(res => {
+    axios.get(queryUrl).then(function(res) {
+      const name = res.data.name
+      const avatar = res.data.avatar_url
 
-      const repoNames = res.data.map(repo => {
-        return repo.name;
-      })
-    repoNamesStr = repoNames.join('\n');
 
-    fs.writeFile('repos.txt', repoNamesStr, err => {
-      console.log('file written')
-  }
-
-    )});
+        const htmlGen = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>${name}: Developer Profile</title>
+        </head>
+        <body>
+            <img src="${avatar}"/>
+            <div>${name}</div>
+        </body>
+        </html>`;
+      
+        fs.writeFile(`${username}.html`, htmlGen, function(err) {
+            if (err) {
+              throw err;
+            }
+    
+        console.log(`Saved ${username}.html`);
+      });
+    });
   });
+    // The PDF will be populated with the following:
+    
+    // * Profile image
+    // * User name
+    // * Links to the following:
+    //   * User location via Google Maps
+    //   * User GitHub profile
+    //   * User blog
+    // * User bio
+    // * Number of public repositories
+    // * Number of followers
+    // * Number of GitHub stars
 
 
-  const htmlGen = `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>Document</title>
-  </head>
-  <body>
-      <div>${repoNamesStr}</div>
-  </body>
-  </html>`;
-};
+// function prompt() {
 
+//     return inquirer.prompt({
+//         message: "Enter your GitHub username:",
+//         name: "username"
+//     },
+//         // {
+//         //     message: 'Choose a color theme from the rainbow',
+//         //     name: 'color'
+//         // }
+//     )
+// };
 
-init();
+// function getUser(username) {
+//     return axios
+//         .get(
+//             `https://api.github.com/users/${username}?client_id=${
+//             process.env.CLIENT_ID
+//             }&client_secret=${process.env.CLIENT_SECRET}`
+//         )
+//         .catch(err => {
+//             console.log(`User not found`);
+//             process.exit(1);
+//         });
+// };
 
+// function getTotalStars(username) {
+//     return axios
+//         .get(
+//             `https://api.github.com/users/${username}/repos?client_id=${
+//             process.env.CLIENT_ID
+//             }&client_secret=${process.env.CLIENT_SECRET}&per_page=100`
+//         )
+//         .then(response => {
+//             // After getting user, count all their repository stars
+//             return response.data.reduce((acc, curr) => {
+//                 acc += curr.stargazers_count;
+//                 return acc;
+//             }, 0);
+//         });
+// }
 
-// The PDF will be populated with the following:
+//             //  const {data} = await axios.get(`https://api.github.com/users/scottkumor`).then(res =>{
+//             //     console.log(res);
+//             //     //  login = res.data.login;
+//             //     //  avatar = res.data.avatar_url;
 
-// * Profile image
-// * User name
-// * Links to the following:
-//   * User location via Google Maps
-//   * User GitHub profile
-//   * User blog
-// * User bio
-// * Number of public repositories
-// * Number of followers
-// * Number of GitHub stars
+//             //   })
