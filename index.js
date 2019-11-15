@@ -1,45 +1,87 @@
 const fs = require("fs");
-const util = require("util");
 const axios = require("axios");
 const inquirer = require("inquirer");
-
-const writeFileAsync = util.promisify(fs.writeFile);
+const HTML5ToPDF = require("html5-to-pdf");
+const path = require("path");
 
 inquirer
-  .prompt({
-    message: "Enter your GitHub username:",
-    name: "username"
-  })
-  .then(function({ username }) {
+.prompt([
+    {
+    type: 'input',
+    message: 'What is your GitHub name?',
+    name: 'username',
+    },
+    {
+    type: 'list',
+    name: 'color',
+    message: 'Pick your favorite color', 
+    choices: [
+        { value: 'red' },
+        { value: 'green' },
+        { value: 'blue' },
+        { value: 'yellow' },
+      ],
+    }
+])
+  .then(function({ username, color }) {
     const queryUrl = `https://api.github.com/users/${username}?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
+    
+    axios.get(queryUrl).then(res => {
+        const name = res.data.name;
+        const avatar = res.data.avatar_url;
+        const bio = res.data.bio;
+        const location = res.data.location;
+        const repos = res.data.public_repos;
+        const blog = res.data.blog;
+        const locStr = location.split(' ').join('');
+        const qStarredURL = `https://api.github.com/users/${username}/starred{/owner}{/repo}`;
+        
+        // axios.get(qStarredURL).then(res => {
+        //     //parse res to get stars
+        //     console.log(res)
+        // })
 
-    axios.get(queryUrl).then(function(res) {
-      const name = res.data.name
-      const avatar = res.data.avatar_url
-
-
-        const htmlGen = `<!DOCTYPE html>
+        return htmlGen = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <link rel="stylesheet" type="text/css" href="style.css">
             <title>${name}: Developer Profile</title>
         </head>
-        <body>
+        <body class="bgc-${color}">
             <img src="${avatar}"/>
-            <div>${name}</div>
+            <div> Developer Name: ${name}</div>
+            <div> Developer Github Username: ${username}</div>
+            <div>This developer currently has ${repos} public Github repositories.</div>
+            <div> Developer Bio and Blog
+                <div>${bio}</div>
+                <div>${blog}</div>
+            </div>
+            <img src="https://maps.googleapis.com/maps/api/staticmap?center=${locStr}&zoom=13&size=600x300&key=AIzaSyCXnECTQGbbU04vCC-mrir-rUNbg7GvgcQ"/>
         </body>
         </html>`;
-      
-        fs.writeFile(`${username}.html`, htmlGen, function(err) {
-            if (err) {
-              throw err;
-            }
-    
-        console.log(`Saved ${username}.html`);
+
+    }).then(htmlGen => {
+            fs.writeFile(`${username}.html`, htmlGen, () => {});
+          }).then(() => {
+        /* read the file from filesystem */
+        /* convert to pdf */
+        const run = async () => {
+          const html5ToPDF = new HTML5ToPDF({
+            inputPath: path.join(__dirname, `${username}.html`),
+            outputPath: path.join(__dirname, `${username}.pdf`),
+            options: { printBackground: true }
+          });
+          await html5ToPDF.start();
+          await html5ToPDF.build();
+          await html5ToPDF.close();
+          console.log("pdf written");
+          process.exit(0);
+        };
+        return run();
       });
-    });
   });
     // The PDF will be populated with the following:
     
@@ -103,3 +145,5 @@ inquirer
 //             //     //  avatar = res.data.avatar_url;
 
 //             //   })
+
+
