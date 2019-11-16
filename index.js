@@ -3,7 +3,6 @@ const axios = require("axios");
 const inquirer = require("inquirer");
 const HTML5ToPDF = require("html5-to-pdf");
 const path = require("path");
-const electron = require("electron");
 let htmlGen = ``;
 let starCount = 0;
 
@@ -44,9 +43,7 @@ inquirer
 
                 res.data.forEach(element => {
                     starCount += element.stargazers_count;
-                    //console.log(starCount);
                 })
-                console.log("Final Stars: " + starCount);
 
                 htmlGen = `
                 <!DOCTYPE html>
@@ -60,31 +57,29 @@ inquirer
                         <link rel="stylesheet" type="text/css" href="${color}.css">
                         <title>${name}: Developer Profile</title>
                     </head>
-                    <body class="bgc-1">
+                    <body class="bgc-1 mxw-fv">
                     <div class="d-f df-fdc jc-c ai-c">
-                        <div class="d-f df-fdc jc-c ai-c bgc-2">
-                            <img src="${avatar}"/>
+                        <div class="d-f df-fdc jc-c ai-c bgc-2 p-l s">
+                            <img class="p-l" src="${avatar}"/>
                             <div class="fz-jjj c-4">${name}</div>
                         </div>
-                        <div class="fz-jj c-4"> Developer Github Username: ${username}</div>
-                        <div class="fz-jj c-4"> This developer currently has ${repos} public Github repositories.</div>
-                        <div class="fz-j c-4"> This developer currently has ${starCount} total StarGazers across all Repos.</div>
-                        <div class="fz-j c-4"> Developer Bio and Blog
-                        <div class="c-4">${bio}</div>
-                        <div class="c-4">${blog}</div>
-                    </div>
-                        <div class="fz-l c-4">Link to Google Maps<sup>&#174;</sup> Location: <a class="fz-l td-n c-3" href="https://www.google.com/maps/place/${locStr}">${locStr}</a></div>
+                        <div class="d-f df-fdc jc-c ai-c">
+                            <div class="fz-jj c-4"> Developer Github Username: ${username}</div>
+                            <div class="fz-jj c-4"> This developer currently has ${repos} public Github repositories.</div>
+                            <div class="fz-j c-4"> This developer currently has ${starCount} total StarGazers across all Repos.</div>
+                            <div class="fz-j c-4 d-f df-fdc jc-c ai-c"> Developer Bio and Blog
+                                <div class="c-4">Bio: ${bio}</div>
+                                <div class="c-4">Blog(s): ${blog}</div>
+                            </div>
+                        </div>
+                        <div class="fz-j c-4">Link to Google Maps<sup>&#174;</sup> Location: <a class="fz-l td-n c-3" href="https://www.google.com/maps/place/${locStr}">Chicago,IL</a></div>
                     </div>
                     </body>
                     </html>`;
 
-                console.log('htmlgen is:');
-                console.log(htmlGen);
 
                 fs.writeFile(`${username}.html`, htmlGen, () => {
-                    return htmlGen;
-                })
-
+               
                     const createPDF = async () => {
                     const html5ToPDF = new HTML5ToPDF({
                       inputPath: path.join(__dirname, `./${username}.html`),
@@ -98,10 +93,11 @@ inquirer
                     await html5ToPDF.start();
                     await html5ToPDF.build();
                     await html5ToPDF.close();
-                    console.log("DONE");
+                    console.log(`${username}.pdf written`);
                     process.exit(0);
                   };
-                return createPDF();
+                return { html: htmlGen, pdf: createPDF() }
+                })
             });
         });
     });  
