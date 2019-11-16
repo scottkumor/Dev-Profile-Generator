@@ -1,0 +1,17 @@
+/* As RGBa codes */
+
+.c-0 { color: rgba(230,219,  0,1) }	/* Main Primary color */
+.c-1 { color: rgb(252, 248, 173) }
+.c-2 { color: rgba(255,242,  0,1) }
+.c-3 { color: rgba(152,145,  0,1) }
+.c-4 { color: rgba( 26, 25,  0,1) }
+
+/* As RGBa codes */
+
+.bgc-0 { background-color: rgba(230,219,  0,1) }	/* Main Primary background-color */
+.bgc-1 { background-color: rgba(252, 248, 173) }
+.bgc-2 { background-color: rgba(255,242,  0,1) }
+.bgc-3 { background-color: rgba(152,145,  0,1) }
+.bgc-4 { background-color: rgba( 26, 25,  0,1) }
+
+html{font-family: 'Oswald', sans-serif;}

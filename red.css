@@ -1,0 +1,16 @@
+
+.c-0 { color: rgba(211, 71, 71,1) }	/* Main Primary color */
+.c-1 { color: rgba(255,163,163,1) }
+.c-2 { color: rgba(245,115,115,1) }
+.c-3 { color: rgba(181, 38, 38,1) }
+.c-4 { color: rgba(143, 13, 13,1) }
+
+
+
+.bgc-0 { background-color: rgba(211, 71, 71,1) }	/* Main Primary background-color */
+.bgc-1 { background-color: rgba(255,163,163,1) }
+.bgc-2 { background-color: rgba(245,115,115,1) }
+.bgc-3 { background-color: rgba(181, 38, 38,1) }
+.bgc-4 { background-color: rgba(143, 13, 13,1) }
+
+html{font-family: 'Sarabun', sans-serif;}

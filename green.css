@@ -1,0 +1,13 @@
+.c-0 { color: rgba(  0,169, 11,1) }	/* Main Primary color */
+.c-1 { color: rgb(170, 238, 174) }
+.c-2 { color: rgba(  0,210, 14,1) }
+.c-3 { color: rgba(  0,131,  9,1) }
+.c-4 { color: rgba(  0, 89,  6,1) }
+
+.bgc-0 { background-color: rgba(  0,169, 11,1) }	/* Main Primary color */
+.bgc-1 { background-color: rgba(  170, 238, 174) }
+.bgc-2 { background-color: rgba(  0,210, 14,1) }
+.bgc-3 { background-color: rgba(  0,131,  9,1) }
+.bgc-4 { background-color: rgba(  0, 89,  6,1) }
+
+html {font-family: 'DM Sans', sans-serif;}
