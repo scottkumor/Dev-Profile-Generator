@@ -36,8 +36,7 @@ inquirer
             const repos = res.data.public_repos;
             const blog = res.data.blog;
             const locStr = location.split(' ').join('');
-            const qStarredURL = `https://api.github.com/users/${username}/repos`;
-
+            const qStarredURL = `https://api.github.com/users/${username}/repos?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
 
             axios.get(qStarredURL).then(res => {
 
@@ -57,22 +56,22 @@ inquirer
                         <link rel="stylesheet" type="text/css" href="${color}.css">
                         <title>${name}: Developer Profile</title>
                     </head>
-                    <body class="bgc-1 mxw-fv">
+                    <body class="bgc-1 mxh-fv">
                     <div class="d-f df-fdc jc-c ai-c">
-                        <div class="d-f df-fdc jc-c ai-c bgc-2 p-l s">
+                        <div class="d-f df-fdc jc-c ai-c bgc-2 p-l m-m s">
                             <img class="p-l" src="${avatar}"/>
-                            <div class="fz-jjj c-4">${name}</div>
+                            <div class="fz-jj c-4">${name}</div>
                         </div>
-                        <div class="d-f df-fdc jc-c ai-c">
-                            <div class="fz-jj c-4"> Developer Github Username: ${username}</div>
-                            <div class="fz-jj c-4"> This developer currently has ${repos} public Github repositories.</div>
-                            <div class="fz-j c-4"> This developer currently has ${starCount} total StarGazers across all Repos.</div>
-                            <div class="fz-j c-4 d-f df-fdc jc-c ai-c"> Developer Bio and Blog
+                        <div class="d-f df-fdc jc-c ai-c w-75">
+                            <div class="fz-j c-4"> Developer Github Username: ${username}</div>
+                            <div class="fz-j c-4"> This developer currently has ${repos} public Github repositories.</div>
+                            <div class="fz-l c-4"> This developer currently has ${starCount} total StarGazers across all Repos.</div>
+                            <div class="fz-l c-4 d-f df-fdc jc-c ai-c"> Developer Bio and Blog
                                 <div class="c-4">Bio: ${bio}</div>
                                 <div class="c-4">Blog(s): ${blog}</div>
                             </div>
                         </div>
-                        <div class="fz-j c-4">Link to Google Maps<sup>&#174;</sup> Location: <a class="fz-l td-n c-3" href="https://www.google.com/maps/place/${locStr}">Chicago,IL</a></div>
+                        <div class="fz-l c-4">Link to Google Maps<sup>&#174;</sup> Location: <a class="fz-l td-n c-3" href="https://www.google.com/maps/place/${locStr}">Chicago,IL</a></div>
                     </div>
                     </body>
                     </html>`;
